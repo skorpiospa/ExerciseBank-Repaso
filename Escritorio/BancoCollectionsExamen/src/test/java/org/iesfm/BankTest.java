@@ -6,10 +6,7 @@ import org.iesfm.exceptions.InsufficientFoundsException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BankTest {
 
@@ -25,8 +22,10 @@ public class BankTest {
     }
 
     public Map<String, Account> accounts () {
-        Map<String, Account> accountMap= new HashMap<>();
+        Map<String, Account> accountMap= new TreeMap<>();
         accountMap.put("123456789", new Account("123456789","49067612", 1520));
+        accountMap.put("123123123", new Account("123123123","49067612",5200));
+        accountMap.put("147258369", new Account("147258369","49067612", 4000));
         accountMap.put("0011223344", new Account("0011223344", "46500000", 2650));
         accountMap.put("987654321", new Account("987654321", "49006790", 100));
 
@@ -108,4 +107,39 @@ public class BankTest {
         Assert.assertEquals(620,bank.getAccount(ibanDestiny).getAmount());
     }
 
+    @Test (expected = AccountNotFoundExceptions.class)
+    public void transfersInAccountsNotFoundIbanTest () throws AccountNotFoundExceptions, InsufficientFoundsException{
+        Bank bank=createBank;
+        String ibanOrigin="1234589";
+        int amount=520;
+        String ibanDestiny="987654321";
+        bank.transfersInAccounts(ibanOrigin,amount,ibanDestiny);
+    }
+
+    @Test (expected = InsufficientFoundsException.class)
+    public void transfersInAccountsInsufficientAmountIbanTest () throws AccountNotFoundExceptions, InsufficientFoundsException{
+        Bank bank=createBank;
+        String ibanOrigin="123456789";
+        int amount=2500;
+        String ibanDestiny="987654321";
+        bank.transfersInAccounts(ibanOrigin,amount,ibanDestiny);
+    }
+
+    @Test
+    public void getAccountofClientTest () throws CustomerNotFoundException{
+        Bank bank=createBank;
+        String nif="49067612";
+        List<Account> resultAccounts=bank.getAccountofClient(nif);
+        Assert.assertEquals(3, resultAccounts.size());
+        Assert.assertEquals(1520, resultAccounts.get(1).getAmount());
+        Assert.assertEquals("147258369", resultAccounts.get(2).getIban());
+    }
+
+    @Test (expected = CustomerNotFoundException.class)
+    public void getNotFoundAccountofClientTest () throws CustomerNotFoundException{
+        Bank bank=createBank;
+        String nif="4145553212";
+        bank.getAccountofClient(nif);
+    }
+    
 }
