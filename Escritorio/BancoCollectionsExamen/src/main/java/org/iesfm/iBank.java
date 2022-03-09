@@ -24,4 +24,12 @@ public interface iBank {
 
     public void outMoneyofAccount (String iban, int amount) throws AccountNotFoundExceptions, InsufficientFoundsException;
 
+
+    //ealizar una transferencia entre dos cuentas de dos clientes.
+    // Para realizar la transferencia será necesario proporcionar la cantidad, el iban de cuenta de origen y de destino.
+    // Si no existe alguna de las dos cuentas AccountNotFoundException,
+    // si no hay saldo suficiente en la cuenta de origen InsufficientFundsException
+
+    public void transfersInAccounts (String ibanOrigin, int amount, String ibanDestiny) throws AccountNotFoundExceptions, InsufficientFoundsException;
+
 }

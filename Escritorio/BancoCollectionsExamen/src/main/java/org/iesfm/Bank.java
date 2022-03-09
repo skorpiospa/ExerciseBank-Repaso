@@ -45,6 +45,18 @@ public class Bank implements iBank {
     }
 
     @Override
+    public void outMoneyofAccount(String iban, int amount) throws AccountNotFoundExceptions, InsufficientFoundsException {
+        Account account=getAccount(iban);
+        account.outMoneyOfAccount(amount);
+    }
+
+    @Override
+    public void transfersInAccounts(String ibanOrigin, int amount, String ibanDestiny) throws AccountNotFoundExceptions, InsufficientFoundsException {
+    outMoneyofAccount(ibanOrigin,amount);
+    transferAmount(ibanDestiny,amount);
+    }
+
+    @Override
     public List<Account> getAccountofClient(String nif) throws CustomerNotFoundException {
         List<Account> accountsClient = new LinkedList<>();
         for (Account account : accounts.values()) {
@@ -56,12 +68,6 @@ public class Bank implements iBank {
             throw new CustomerNotFoundException(nif);
         }
         return accountsClient;
-    }
-
-    @Override
-    public void outMoneyofAccount(String iban, int amount) throws AccountNotFoundExceptions, InsufficientFoundsException {
-        Account account=getAccount(iban);
-        account.outMoneyOfAccount(amount);
     }
 
     public String getName() {

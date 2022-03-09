@@ -24,7 +24,7 @@ public class Account {
         if (amount<money){
             throw new InsufficientFoundsException();
         }
-        return amount - money;
+        return amount -= money;
     }
 
     public String getIban() {

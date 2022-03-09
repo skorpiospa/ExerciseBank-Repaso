@@ -2,6 +2,7 @@ package org.iesfm;
 
 import org.iesfm.exceptions.AccountNotFoundExceptions;
 import org.iesfm.exceptions.CustomerNotFoundException;
+import org.iesfm.exceptions.InsufficientFoundsException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -69,9 +70,42 @@ public class BankTest {
     @Test
     public void transferAmountTest () throws AccountNotFoundExceptions {
         Bank bank=createBank;
-        
-
+        String iban="123456789";
+        String iban2="987654321";
+        int amount=1000;
+        bank.transferAmount(iban,amount);
+        bank.transferAmount(iban2,amount);
+        Assert.assertEquals(2520, bank.getAccount(iban).getAmount());
+        Assert.assertEquals(1100,bank.getAccount(iban2).getAmount());
     }
 
+    @Test
+    public void outMoneyofAccountTest () throws  AccountNotFoundExceptions, InsufficientFoundsException {
+        Bank bank = createBank;
+        String iban = "123456789";
+        int amount = 500;
+        bank.outMoneyofAccount(iban,amount);
+        Assert.assertEquals(1020, bank.getAccount(iban).getAmount());
+    }
+
+    @Test (expected = InsufficientFoundsException.class)
+    public void InsuficientMoneyOnTransferTest () throws  AccountNotFoundExceptions, InsufficientFoundsException {
+        Bank bank = createBank;
+        String iban = "987654321";
+        int amount = 500;
+        bank.outMoneyofAccount(iban,amount);
+    }
+
+    @Test
+    public void transfersInAccountsTest () throws AccountNotFoundExceptions, InsufficientFoundsException{
+        Bank bank=createBank;
+        String ibanOrigin="123456789";
+        int amount=520;
+        String ibanDestiny="987654321";
+        bank.transfersInAccounts(ibanOrigin,amount,ibanDestiny);
+
+        Assert.assertEquals(1000, bank.getAccount(ibanOrigin).getAmount());
+        Assert.assertEquals(620,bank.getAccount(ibanDestiny).getAmount());
+    }
 
 }
